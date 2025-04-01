@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloatingParticles", "FloatingParticles.csproj", "{19E1E1D1-DBFC-45C0-9CB8-F4420CE621FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19E1E1D1-DBFC-45C0-9CB8-F4420CE621FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19E1E1D1-DBFC-45C0-9CB8-F4420CE621FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19E1E1D1-DBFC-45C0-9CB8-F4420CE621FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19E1E1D1-DBFC-45C0-9CB8-F4420CE621FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {50577EDC-144D-43CA-9310-6F44BC7B2C80}
+	EndGlobalSection
+EndGlobal
