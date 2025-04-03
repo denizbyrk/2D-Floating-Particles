@@ -13,11 +13,12 @@ namespace FloatingParticles {
 
             this.rectangle = rectangle;
             this.color = color;
+            this.text = "";
         }
 
         public void Update() {
 
-            Rectangle mouse = new Rectangle((int)Util.getMousePosition.X, (int)Util.getMousePosition.Y, 1, 1);
+            Rectangle mouse = new Rectangle((int)Util.getMousePosition().X, (int)Util.getMousePosition().Y, 1, 1);
 
             if (mouse.Intersects(this.rectangle) && Util.IsLeftClickDown()) {
 
@@ -25,10 +26,11 @@ namespace FloatingParticles {
             }
         }
 
-        public void Draw(SpriteBatch b, SpriteFont font) {
+
+        public void Draw(SpriteBatch b) {
 
             b.Draw(Main.pixel, this.rectangle, this.color);
-            b.DrawString(font, this.text, new Vector2(this.rectangle.X + this.rectangle.Width / 4, this.rectangle.Y + this.rectangle.Height / 4), Color.Black);
+            b.DrawString(Main.font, this.text, new Vector2(this.rectangle.X + this.rectangle.Width / 4, this.rectangle.Y + this.rectangle.Height / 32), Color.Black);
         }
     }
 }

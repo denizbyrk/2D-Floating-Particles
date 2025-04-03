@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace FloatingParticles {
     public class Util {
@@ -7,18 +9,27 @@ namespace FloatingParticles {
         private static MouseState prevState;
         private static MouseState currentState;
 
+        private static KeyboardState prevKState;
+        private static KeyboardState currentKState;
+
         public static bool IsLeftClickDown() => Util.prevState.LeftButton == ButtonState.Released && Util.currentState.LeftButton == ButtonState.Pressed;
 
         public static bool IsLeftClickHold() => Util.currentState.LeftButton == ButtonState.Pressed;
 
-        public static Vector2 getMousePosition => currentState.Position.ToVector2();
+        public static bool IsKeyDown(Keys k) => Util.prevKState.IsKeyUp(k) && Util.currentKState.IsKeyDown(k);
+
+        public static bool IsKeyHold(Keys k) => Util.currentKState.IsKeyDown(k);
+
+        public static Vector2 getPrevMousePosition() => prevState.Position.ToVector2();
+
+        public static Vector2 getMousePosition() => currentState.Position.ToVector2();
 
         public static bool checkMouseCoordinates() {
 
-            if (Util.getMousePosition.X < Main.getScreenWidth() &&
-                Util.getMousePosition.X > 0 &&
-                Util.getMousePosition.Y < Main.getScreenHeigth() &&
-                Util.getMousePosition.Y > 0) {
+            if (Util.getMousePosition().X < Main.getScreenWidth() &&
+                Util.getMousePosition().X > 0 &&
+                Util.getMousePosition().Y < Main.getScreenHeigth() &&
+                Util.getMousePosition().Y > 0) {
 
                 return true;
             }
@@ -26,10 +37,13 @@ namespace FloatingParticles {
             return false;
         }
 
-        public static void Update() {
+        public static void Update(GameTime dt) {
 
-            prevState = currentState;
-            currentState = Mouse.GetState();
+            Util.prevState = Util.currentState;
+            Util.currentState = Mouse.GetState();
+
+            Util.prevKState = Util.currentKState;
+            Util.currentKState = Keyboard.GetState();
         }
 
         public static Color ColorFromHSV(float hue, float saturation, float value) {

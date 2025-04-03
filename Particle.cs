@@ -64,8 +64,8 @@ namespace FloatingParticles {
 
         public void Update(GameTime dt) {
 
-            this.position.X += velocityX;
-            this.position.Y += velocityY;
+            this.position.X += this.velocityX;
+            this.position.Y += this.velocityY;
             
             if (Main.enableCollision == true) {
 
