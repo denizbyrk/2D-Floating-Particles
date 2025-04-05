@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Runtime.CompilerServices;
 
 namespace FloatingParticles {
     public class Util {

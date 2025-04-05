@@ -25,6 +25,30 @@ namespace FloatingParticles {
             this.destroy = false;
         }
 
+        private void applyFriction() {
+
+            float min = 0.01f;
+            float max = Main.friction + 0.02f;
+
+            float randomFriction = (float)(Main.random.NextDouble() * (max - min) + min);
+
+            if (this.collided == true) {
+
+                this.velocityX += this.velocityX > 0 ? -randomFriction : (this.velocityX < 0 ? randomFriction : 0);
+                this.velocityY += this.velocityY > 0 ? -randomFriction : (this.velocityY < 0 ? randomFriction : 0);
+
+                if (this.velocityX < 0 && this.velocityX > -randomFriction) {
+
+                    this.velocityX = 0;
+                }
+
+                if (this.velocityY < 0 && this.velocityY > -randomFriction) {
+
+                    this.velocityY = 0;
+                }
+            }
+        }
+
         private void checkBounds() {
 
             if (this.position.X > Main.getScreenWidth() || this.position.X < 0 ||
@@ -73,6 +97,11 @@ namespace FloatingParticles {
             } else {
 
                 this.checkBounds();
+            }
+
+            if (Main.enableFriction == true) {
+
+                this.applyFriction();
             }
 
             if (this.collided == true) {

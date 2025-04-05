@@ -15,7 +15,7 @@ public class Main : Game {
     private const int menuHeight = 200;
     private SpriteBatch b;
     public static Texture2D pixel;
-    private Random random = new Random();
+    public static Random random = new Random();
     private Rectangle mouse;
     private float FPS = 60.0f;
 
@@ -27,10 +27,12 @@ public class Main : Game {
     private bool randomSpawn = false;
     public static bool enableCollision = true;
     public static bool enableAlpha = true;
+    public static bool enableFriction = true;
     private int particleSpeed = 5;
     private int particleSize = 2;
     private int particleCount = 60;
     private int spawnFrequency = 0;
+    public static float friction = 0.005f;
     private float radius = 0;
     public static float decaySpeed = 0.01f;
     private float hue = 0;
@@ -56,10 +58,13 @@ public class Main : Game {
     private Button decreaseSpawnFrequencyButton;
     private Button increaseRadiusButton;
     private Button decreaseRadiusButton;
+    private Button increaseFrictionButton;
+    private Button decreaseFrictionButton;
 
     private Button enableRandomSpawnButton;
     private Button enableEdgeCollisionButton;
     private Button enableDecayButton;
+    private Button enableFrictionButton;
 
     private Button resetValuesButton;
     private Button clearParticlesButton;
@@ -124,11 +129,7 @@ public class Main : Game {
 
         this.checkButtonClick();
 
-        this.particleSpeed = MathHelper.Clamp(this.particleSpeed, 1, 20);
-        this.particleSize = MathHelper.Clamp(this.particleSize, 1, 10);
-        this.particleCount = MathHelper.Clamp(this.particleCount, 1, 500);
-        this.spawnFrequency = MathHelper.Clamp(this.spawnFrequency, 0, 60);
-        this.radius = MathHelper.Clamp(this.radius, 0, 100);
+        this.clampValues();
 
         this.manageParticles(dt);
 
@@ -140,8 +141,6 @@ public class Main : Game {
         this.GraphicsDevice.Clear(Color.Black);
 
         this.b.Begin();
-
-        this.b.Draw(Main.pixel, mouse, Color.White);
 
         foreach (Particle p in this.particles) {
 
@@ -213,8 +212,8 @@ public class Main : Game {
 
             if (this.randomSpawn) {
 
-                angle = MathHelper.TwoPi * (float)this.random.NextDouble();
-                spawnRadius = this.radius * (float)Math.Sqrt(this.random.NextDouble());
+                angle = MathHelper.TwoPi * (float)Main.random.NextDouble();
+                spawnRadius = this.radius * (float)Math.Sqrt(Main.random.NextDouble());
 
             } else {
 
@@ -234,6 +233,16 @@ public class Main : Game {
         }
     }
 
+    private void clampValues() {
+
+        this.particleSpeed = MathHelper.Clamp(this.particleSpeed, 1, 20);
+        this.particleSize = MathHelper.Clamp(this.particleSize, 1, 10);
+        this.particleCount = MathHelper.Clamp(this.particleCount, 1, 500);
+        this.spawnFrequency = MathHelper.Clamp(this.spawnFrequency, 0, 60);
+        this.radius = MathHelper.Clamp(this.radius, 0, 100);
+        Main.friction = (float)Math.Round(MathHelper.Clamp(Main.friction, 0, 1f), 3);
+    }
+
     private void drawMenu(SpriteBatch b) {
 
         b.Draw(Main.pixel, new Rectangle(0, Main.screenHeight + 8, Main.screenWidth, Main.menuHeight), Color.Black);
@@ -244,12 +253,15 @@ public class Main : Game {
         b.DrawString(Main.font, "Spawned Particles: " + this.particleCount, new Vector2(this.buttonSize * 3.5f, this.increaseParticleCountButton.rectangle.Y), Color.White);
         b.DrawString(Main.font, "Frequency (Frames): " + this.spawnFrequency, new Vector2(this.buttonSize * 3.5f, this.increaseSpawnFrequencyButton.rectangle.Y), Color.White);
         b.DrawString(Main.font, "Radius: " + this.radius, new Vector2(this.buttonSize * 3.5f, this.increaseRadiusButton.rectangle.Y), Color.White);
+        b.DrawString(Main.font, "Friction: " + Main.friction, new Vector2(this.increaseFrictionButton.rectangle.X + this.buttonSize * 1.5f, this.increaseFrictionButton.rectangle.Y), Color.White);
 
         b.DrawString(Main.font, "Hold LShift to change values by 5", new Vector2(10, this.increaseSpeedButton.rectangle.Y - this.buttonSize - 4), Color.Red);
 
         b.DrawString(Main.font, "Random Spawn: " + this.randomSpawn, new Vector2(this.enableRandomSpawnButton.rectangle.X + 48, this.enableRandomSpawnButton.rectangle.Y), Color.White);
         b.DrawString(Main.font, "Edge Collision: " + Main.enableCollision, new Vector2(this.enableEdgeCollisionButton.rectangle.X + 48, this.enableEdgeCollisionButton.rectangle.Y), Color.White);
         b.DrawString(Main.font, "Decay: " + Main.enableAlpha, new Vector2(this.enableDecayButton.rectangle.X + 48, this.enableDecayButton.rectangle.Y), Color.White);
+        b.DrawString(Main.font, "Friction: " + Main.enableFriction, new Vector2(this.enableFrictionButton.rectangle.X + 48, this.enableFrictionButton.rectangle.Y), Color.White);
+
         b.DrawString(Main.font, "Reset Values", new Vector2(this.resetValuesButton.rectangle.X + 48, this.resetValuesButton.rectangle.Y), Color.White);
         b.DrawString(Main.font, "Clear Particles", new Vector2(this.clearParticlesButton.rectangle.X + 48, this.clearParticlesButton.rectangle.Y), Color.White);    
 
@@ -327,6 +339,8 @@ public class Main : Game {
         this.increaseSpawnFrequencyButton = new Button(new Rectangle(this.decreaseSpawnFrequencyButton.rectangle.X + this.buttonSize + 12, this.decreaseSpawnFrequencyButton.rectangle.Y, this.buttonSize, this.buttonSize), Color.Gray);
         this.decreaseRadiusButton = new Button(new Rectangle(10, increaseSpawnFrequencyButton.rectangle.Y + 32, this.buttonSize, this.buttonSize), Color.Gray);
         this.increaseRadiusButton = new Button(new Rectangle(this.decreaseRadiusButton.rectangle.X + this.buttonSize + 12, this.decreaseRadiusButton.rectangle.Y, this.buttonSize, this.buttonSize), Color.Gray);
+        this.decreaseFrictionButton = new Button(new Rectangle(320, increaseSpawnFrequencyButton.rectangle.Y + 32, this.buttonSize, this.buttonSize), Color.Gray);
+        this.increaseFrictionButton = new Button(new Rectangle(this.decreaseFrictionButton.rectangle.X + this.buttonSize + 12, this.decreaseFrictionButton.rectangle.Y, this.buttonSize, this.buttonSize), Color.Gray);
 
         this.decreaseSpeedButton.text = "-";
         this.increaseSpeedButton.text = "+";
@@ -338,17 +352,20 @@ public class Main : Game {
         this.decreaseSpawnFrequencyButton.text = "-";
         this.increaseRadiusButton.text = "+";
         this.decreaseRadiusButton.text = "-";
+        this.decreaseFrictionButton.text = "-";
+        this.increaseFrictionButton.text = "+";
 
-        this.enableRandomSpawnButton = new Button(new Rectangle(350, this.increaseSpeedButton.rectangle.Y, this.buttonSize * 2, this.buttonSize), Color.Gray);
+        this.enableRandomSpawnButton = new Button(new Rectangle(320, this.increaseSpeedButton.rectangle.Y, this.buttonSize * 2, this.buttonSize), Color.Gray);
         this.enableEdgeCollisionButton = new Button(new Rectangle(this.enableRandomSpawnButton.rectangle.X, this.enableRandomSpawnButton.rectangle.Y + 32, this.buttonSize * 2, this.buttonSize), Color.Gray);
         this.enableDecayButton = new Button(new Rectangle(this.enableEdgeCollisionButton.rectangle.X, this.enableEdgeCollisionButton.rectangle.Y + 32, this.buttonSize * 2, this.buttonSize), Color.Gray);
+        this.enableFrictionButton = new Button(new Rectangle(320, this.enableDecayButton.rectangle.Y + 32, this.buttonSize * 2, this.buttonSize), Color.Gray);
 
         //reset buttons
-        this.resetValuesButton = new Button(new Rectangle(350, this.enableDecayButton.rectangle.Y + 32, this.buttonSize * 2, this.buttonSize), Color.Gray);
+        this.resetValuesButton = new Button(new Rectangle(630, this.enableRandomSpawnButton.rectangle.Y, this.buttonSize * 2, this.buttonSize), Color.Gray);
         this.clearParticlesButton = new Button(new Rectangle(this.resetValuesButton.rectangle.X, this.resetValuesButton.rectangle.Y + 32, this.buttonSize * 2, this.buttonSize), Color.Gray);
 
         //color buttons
-        this.redColorButton = new Button(new Rectangle(800, Main.screenHeight + 90, this.buttonSize * 2, this.buttonSize * 2), Color.Red);
+        this.redColorButton = new Button(new Rectangle(950, Main.screenHeight + 90, this.buttonSize * 2, this.buttonSize * 2), Color.Red);
         this.orangeColorButton = new Button(new Rectangle(this.redColorButton.rectangle.X + this.redColorButton.rectangle.Width, this.redColorButton.rectangle.Y, this.buttonSize * 2, this.buttonSize * 2), Color.Orange);
         this.yellowColorButton = new Button(new Rectangle(this.orangeColorButton.rectangle.X + this.orangeColorButton.rectangle.Width, this.orangeColorButton.rectangle.Y, this.buttonSize * 2, this.buttonSize * 2), Color.Yellow);
         this.greenColorButton = new Button(new Rectangle(this.yellowColorButton.rectangle.X + this.yellowColorButton.rectangle.Width, this.yellowColorButton.rectangle.Y, this.buttonSize * 2, this.buttonSize * 2), Color.Green);
@@ -373,9 +390,12 @@ public class Main : Game {
             this.decreaseSpawnFrequencyButton,
             this.increaseRadiusButton,
             this.decreaseRadiusButton,
+            this.increaseFrictionButton,
+            this.decreaseFrictionButton,
             this.enableRandomSpawnButton,
             this.enableEdgeCollisionButton,
             this.enableDecayButton,
+            this.enableFrictionButton,
             this.resetValuesButton,
             this.clearParticlesButton,
             this.redColorButton,
@@ -392,19 +412,22 @@ public class Main : Game {
 
         this.buttonActions = new Dictionary<Button, Action> {
 
-            { this.increaseSpeedButton, () => this.particleSpeed += change },
-            { this.decreaseSpeedButton, () => this.particleSpeed -= change },
-            { this.increaseSizeButton, () => this.particleSize += change },
-            { this.decreaseSizeButton, () => this.particleSize -= change },
-            { this.increaseParticleCountButton, () => this.particleCount += change },
-            { this.decreaseParticleCountButton, () => this.particleCount -= change },
-            { this.increaseSpawnFrequencyButton, () => this.spawnFrequency += change },
-            { this.decreaseSpawnFrequencyButton, () => this.spawnFrequency -= change },
-            { this.increaseRadiusButton, () => this.radius += change },
-            { this.decreaseRadiusButton, () => this.radius -= change },
+            { this.increaseSpeedButton, () => this.particleSpeed += this.change },
+            { this.decreaseSpeedButton, () => this.particleSpeed -= this.change },
+            { this.increaseSizeButton, () => this.particleSize += this.change },
+            { this.decreaseSizeButton, () => this.particleSize -= this.change },
+            { this.increaseParticleCountButton, () => this.particleCount += this.change },
+            { this.decreaseParticleCountButton, () => this.particleCount -= this.change },
+            { this.increaseSpawnFrequencyButton, () => this.spawnFrequency += this.change },
+            { this.decreaseSpawnFrequencyButton, () => this.spawnFrequency -= this.change },
+            { this.increaseRadiusButton, () => this.radius += this.change },
+            { this.decreaseRadiusButton, () => this.radius -= this.change },
+            { this.decreaseFrictionButton, () => Main.friction -= this.change / 200f },
+            { this.increaseFrictionButton, () => Main.friction += this.change / 200f },
             { this.enableRandomSpawnButton, () => this.randomSpawn = !this.randomSpawn },
             { this.enableEdgeCollisionButton, () => Main.enableCollision = !Main.enableCollision },
             { this.enableDecayButton, () => Main.enableAlpha = !Main.enableAlpha },
+            { this.enableFrictionButton, () => Main.enableFriction = !Main.enableFriction },
             { this.resetValuesButton, () =>
                 {
                     this.particleSpeed = 5;
@@ -412,9 +435,11 @@ public class Main : Game {
                     this.particleCount = 60;
                     this.spawnFrequency = 0;
                     this.radius = 0;
+                    Main.friction = 0.005f;
                     this.randomSpawn = false;
                     Main.enableCollision = true;
                     Main.enableAlpha = true;
+                    Main.enableFriction = true;
                 }
             },
             { this.clearParticlesButton, () => this.particles.Clear() }
