@@ -10,18 +10,25 @@ namespace FloatingParticles {
         private static KeyboardState prevKState;
         private static KeyboardState currentKState;
 
+        //check left click
         public static bool IsLeftClickDown() => Util.prevState.LeftButton == ButtonState.Released && Util.currentState.LeftButton == ButtonState.Pressed;
 
+        //chech left click hold
         public static bool IsLeftClickHold() => Util.currentState.LeftButton == ButtonState.Pressed;
 
+        //check key down
         public static bool IsKeyDown(Keys k) => Util.prevKState.IsKeyUp(k) && Util.currentKState.IsKeyDown(k);
 
+        //check key hold
         public static bool IsKeyHold(Keys k) => Util.currentKState.IsKeyDown(k);
 
+        //get prev mouse position
         public static Vector2 getPrevMousePosition() => prevState.Position.ToVector2();
 
+        //get current mouse position
         public static Vector2 getMousePosition() => currentState.Position.ToVector2();
 
+        //check if the mouse is within the bounds of the screen
         public static bool checkMouseCoordinates() {
 
             if (Util.getMousePosition().X < Main.getScreenWidth() &&
@@ -35,6 +42,7 @@ namespace FloatingParticles {
             return false;
         }
 
+        //update the mouse and keyboard state
         public static void Update(GameTime dt) {
 
             Util.prevState = Util.currentState;
@@ -44,6 +52,7 @@ namespace FloatingParticles {
             Util.currentKState = Keyboard.GetState();
         }
 
+        //method for color cycling, used for the rainbow effect
         public static Color ColorFromHSV(float hue, float saturation, float value) {
 
             int hi = (int)(hue / 60) % 6;
