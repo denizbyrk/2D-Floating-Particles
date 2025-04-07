@@ -143,20 +143,24 @@ namespace FloatingParticles {
         //update
         protected override void Update(GameTime dt) {
 
-            //update mouse and keyboard states
-            Util.Update(dt);
+            //prevent the program from running in the background
+            if (this.IsActive == true) {
 
-            //check button clicks
-            this.checkButtonClick();
+                //update mouse and keyboard states
+                Util.Update(dt);
 
-            //clamp values
-            this.clampValues();
+                //check button clicks
+                this.checkButtonClick();
 
-            //check if the program is paused
-            if (this.pause == false) {
+                //clamp values
+                this.clampValues();
 
-                //manage particles
-                this.manageParticles(dt);
+                //check if the program is paused
+                if (this.pause == false) {
+
+                    //manage particles
+                    this.manageParticles(dt);
+                }
             }
 
             base.Update(dt);
